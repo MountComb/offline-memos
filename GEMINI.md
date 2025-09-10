@@ -74,3 +74,7 @@ The application's design should adhere to the following principles:
 - Use `pnpm` for package management.
 - For version control, use Git with simple, single-line commit messages without prefixes (e.g., "Add note creation feature").
 - Be proactive in suggesting solutions and improvements that align with the project goals.
+
+## 7. Developer Notes
+
+- **`shadcn/ui`**: When adding new `shadcn/ui` components, use the following command: `pnpm dlx shadcn@latest add <component-name>`. The `shadcn-ui` package is deprecated.
