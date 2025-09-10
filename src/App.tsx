@@ -3,6 +3,7 @@ import Layout from "@/components/Layout";
 import HomePage from "@/pages/HomePage";
 import NoteEditorPage from "@/pages/NoteEditorPage";
 import SettingsPage from "@/pages/SettingsPage";
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>
+      <Toaster position="top-center" richColors />
     </Router>
   );
 }

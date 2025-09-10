@@ -1,39 +1,44 @@
+// src/lib/settings.ts
+
 export interface AppSettings {
-    apiEndpoint?: string;
-    accessToken?: string;
-    autoDeleteDays: number; // 0 means disabled
+  apiEndpoint: string;
+  accessToken: string;
+  autoDeleteDays: number;
 }
 
-const SETTINGS_KEY = 'memos_settings';
-
-const defaultSettings: AppSettings = {
-    autoDeleteDays: 0, 
-};
+const SETTINGS_KEY = 'memos-offline-settings';
 
 /**
- * Retrieves the current app settings from localStorage.
- * @returns The current settings or the default settings if none are found.
+ * Retrieves the application settings from local storage.
+ * @returns The settings object or a default object if not found.
  */
 export function getSettings(): AppSettings {
-    try {
-        const storedSettings = localStorage.getItem(SETTINGS_KEY);
-        if (storedSettings) {
-            return { ...defaultSettings, ...JSON.parse(storedSettings) };
-        }
-    } catch (error) {
-        console.error("Failed to retrieve settings: ", error);
+  try {
+    const settingsJson = localStorage.getItem(SETTINGS_KEY);
+    if (settingsJson) {
+      return JSON.parse(settingsJson);
     }
-    return defaultSettings;
+  } catch (error) {
+    console.error("Failed to parse settings from localStorage: ", error);
+  }
+  
+  // Return a default object if settings are not found or parsing fails
+  return {
+    apiEndpoint: '',
+    accessToken: '',
+    autoDeleteDays: 0,
+  };
 }
 
 /**
- * Saves the app settings to localStorage.
+ * Saves the application settings to local storage.
  * @param settings The settings object to save.
  */
 export function saveSettings(settings: AppSettings): void {
-    try {
-        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-    } catch (error) {
-        console.error("Failed to save settings: ", error);
-    }
+  try {
+    const settingsJson = JSON.stringify(settings);
+    localStorage.setItem(SETTINGS_KEY, settingsJson);
+  } catch (error) {
+    console.error("Failed to save settings to localStorage: ", error);
+  }
 }

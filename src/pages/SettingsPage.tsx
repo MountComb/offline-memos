@@ -1,12 +1,31 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { getSettings, saveSettings, type AppSettings } from '@/lib/settings';
+import { toast } from 'sonner';
 
 function SettingsPage() {
+    const [settings, setSettings] = useState<AppSettings>({ apiEndpoint: '', accessToken: '', autoDeleteDays: 0 });
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setSettings(getSettings());
+    }, []);
+
     const handleSave = () => {
-        // Later, this will save settings to localStorage or IndexedDB
-        console.log("Saving settings...");
+        saveSettings(settings);
+        toast.success("Settings saved!");
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value, type } = e.target;
+        setSettings(prevSettings => ({
+            ...prevSettings,
+            [id]: type === 'number' ? parseInt(value, 10) || 0 : value,
+        }));
     };
 
     return (
@@ -20,22 +39,25 @@ function SettingsPage() {
             <Separator />
             <div className="space-y-4">
                  <div className="space-y-2">
-                    <Label htmlFor="api-endpoint">Memos API Endpoint</Label>
-                    <Input id="api-endpoint" placeholder="https://your-memos-instance.com" />
+                    <Label htmlFor="apiEndpoint">Memos API Endpoint</Label>
+                    <Input id="apiEndpoint" value={settings.apiEndpoint} onChange={handleChange} placeholder="https://your-memos-instance.com" />
                 </div>
                  <div className="space-y-2">
-                    <Label htmlFor="access-token">Access Token</Label>
-                    <Input id="access-token" type="password" placeholder="Your secret access token" />
+                    <Label htmlFor="accessToken">Access Token</Label>
+                    <Input id="accessToken" type="password" value={settings.accessToken} onChange={handleChange} placeholder="Your secret access token" />
                 </div>
                  <div className="space-y-2">
-                    <Label htmlFor="auto-delete">Auto-delete synced notes (days)</Label>
-                    <Input id="auto-delete" type="number" placeholder="e.g., 7" defaultValue={0} />
+                    <Label htmlFor="autoDeleteDays">Auto-delete synced notes (days)</Label>
+                    <Input id="autoDeleteDays" type="number" value={settings.autoDeleteDays} onChange={handleChange} placeholder="e.g., 7" />
                      <p className="text-xs text-muted-foreground">
                         Set to 0 to disable auto-delete.
                     </p>
                 </div>
             </div>
-            <Button onClick={handleSave}>Save Settings</Button>
+            <div className="flex items-center gap-2">
+                <Button onClick={handleSave}>Save Settings</Button>
+                <Button variant="outline" onClick={() => navigate(-1)}>Go Back</Button>
+            </div>
         </div>
     );
 }
