@@ -19,8 +19,8 @@ class MemosDB extends Dexie {
     this.version(1).stores({
       // Define the schema for the 'notes' table.
       // '++localId' makes localId the auto-incrementing primary key.
-      // 'remoteId' and 'isSynced' are indexed for faster queries.
-      notes: '++localId, remoteId, isSynced',
+      // 'remoteId', 'isSynced', and 'displayTime' are indexed for faster queries.
+      notes: '++localId, remoteId, isSynced, displayTime',
     });
   }
 }

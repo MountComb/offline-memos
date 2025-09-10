@@ -78,3 +78,4 @@ The application's design should adhere to the following principles:
 ## 7. Developer Notes
 
 - **`shadcn/ui`**: When adding new `shadcn/ui` components, use the following command: `pnpm dlx shadcn@latest add <component-name>`. The `shadcn-ui` package is deprecated.
+- **TypeScript `verbatimModuleSyntax`**: The project is configured with `verbatimModuleSyntax` in `tsconfig.json`. This requires using type-only imports for types and interfaces (e.g., `import type { MyType } from './my-module'`). Failure to do so will result in a build error.
