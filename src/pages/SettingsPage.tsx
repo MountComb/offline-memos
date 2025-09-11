@@ -5,7 +5,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { getSettings, saveSettings, type AppSettings } from '@/lib/settings';
+import { deleteDatabase } from '@/lib/db';
+import { MemosAPI } from '@/lib/memos-api';
 import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 function SettingsPage() {
     const [settings, setSettings] = useState<AppSettings>({ apiEndpoint: '', accessToken: '', autoDeleteDays: 0 });
@@ -26,6 +46,24 @@ function SettingsPage() {
             ...prevSettings,
             [id]: type === 'number' ? parseInt(value, 10) || 0 : value,
         }));
+    };
+
+    const handleTestConnection = async () => {
+        toast.info("Testing connection...");
+        const api = new MemosAPI(settings);
+        const result = await api.testConnection();
+        if (result.ok) {
+            toast.success(result.message);
+        } else {
+            toast.error(result.message);
+        }
+    };
+
+    const handleDeleteDatabase = async () => {
+      console.log("Database deletion initiated");
+      await deleteDatabase();
+      toast.success("Local database deleted. The app will now reload.");
+      setTimeout(() => window.location.reload(), 2000);
     };
 
     return (
@@ -56,8 +94,39 @@ function SettingsPage() {
             </div>
             <div className="flex items-center gap-2">
                 <Button onClick={handleSave}>Save Settings</Button>
+                <Button variant="outline" onClick={handleTestConnection}>Test Connection</Button>
                 <Button variant="outline" onClick={() => navigate(-1)}>Go Back</Button>
             </div>
+
+            <Separator />
+
+            <Card className="border-destructive">
+                <CardHeader>
+                    <CardTitle className="text-destructive">Danger Zone</CardTitle>
+                    <CardDescription>
+                        These actions are irreversible. Please proceed with caution.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="destructive">Delete Local Database</Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete all your local notes, including those that have not been synced. All settings will be reset.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleDeleteDatabase}>Continue</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </CardContent>
+            </Card>
         </div>
     );
 }

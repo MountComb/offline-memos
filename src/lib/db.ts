@@ -89,5 +89,16 @@ export async function getNoteById(localId: number): Promise<Note | undefined> {
     }
 }
 
+/**
+ * Deletes the entire database.
+ */
+export async function deleteDatabase(): Promise<void> {
+    try {
+        await db.delete();
+    } catch (error) {
+        console.error("Failed to delete database: ", error);
+    }
+}
+
 // Export the raw db instance for use with dexie-react-hooks
 export { db };
