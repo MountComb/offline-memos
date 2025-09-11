@@ -1,8 +1,8 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type Note } from "@/lib/db";
+import Markdown from "@/components/Markdown";
 
 function NoteItem({ note }: { note: Note }) {
   const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -14,17 +14,27 @@ function NoteItem({ note }: { note: Note }) {
   }).format(note.displayTime);
 
   return (
-    <Card>
-      <Link to={`/note/${note.localId}`}>
-        <CardContent className="pt-6">
-          <p className="whitespace-pre-wrap text-sm text-foreground">{note.content}</p>
+    <Link to={`/note/${note.localId}`} className="block">
+      <Card>
+        <CardContent className="prose dark:prose-invert whitespace-pre-wrap">
+          <Markdown content={note.content} />
         </CardContent>
         <CardFooter className="flex items-center justify-between text-xs text-muted-foreground">
           <span>{formattedDate}</span>
-          {!note.isSynced && <Badge variant="outline">Not Synced</Badge>}
+          {note.isSynced ? (
+            <div className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-green-500" />
+              <span>Synced</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-yellow-500" />
+              <span>Not Synced</span>
+            </div>
+          )}
         </CardFooter>
-      </Link>
-    </Card>
+      </Card>
+    </Link>
   );
 }
 
