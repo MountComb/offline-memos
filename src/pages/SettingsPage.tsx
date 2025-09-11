@@ -81,6 +81,12 @@ function SettingsPage({ pwaNeedsRefresh, pwaUpdateServiceWorker }: SettingsPageP
       </div>
       <Separator />
       <div className="space-y-4">
+        <div>
+          <h3 className="text-lg font-medium">API Settings</h3>
+          <p className="text-sm text-muted-foreground">
+            Configure the connection to your Memos instance.
+          </p>
+        </div>
         <div className="space-y-2">
           <Label htmlFor="apiEndpoint">Memos API Endpoint</Label>
           <Input id="apiEndpoint" value={settings.apiEndpoint} onChange={handleChange} placeholder="https://your-memos-instance.com" />
@@ -88,6 +94,16 @@ function SettingsPage({ pwaNeedsRefresh, pwaUpdateServiceWorker }: SettingsPageP
         <div className="space-y-2">
           <Label htmlFor="accessToken">Access Token</Label>
           <Input id="accessToken" type="password" value={settings.accessToken} onChange={handleChange} placeholder="Your secret access token" />
+        </div>
+        <Button variant="outline" onClick={handleTestConnection}>Test Connection</Button>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-lg font-medium">Local Data</h3>
+          <p className="text-sm text-muted-foreground">
+            Manage local data and sync settings.
+          </p>
         </div>
         <div className="space-y-2">
           <Label htmlFor="autoDeleteDays">Auto-delete synced notes (days)</Label>
@@ -97,26 +113,8 @@ function SettingsPage({ pwaNeedsRefresh, pwaUpdateServiceWorker }: SettingsPageP
       </div>
       <div className="flex items-center gap-2">
         <Button onClick={handleSave}>Save Settings</Button>
-        <Button variant="outline" onClick={handleTestConnection}>Test Connection</Button>
         <Button variant="outline" onClick={() => navigate(-1)}>Go Back</Button>
       </div>
-
-      <Separator />
-
-      <Card>
-        <CardHeader>
-          <CardTitle>About</CardTitle>
-          <CardDescription>Information about the application.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span>Version: {import.meta.env.APP_VERSION}</span>
-            {pwaNeedsRefresh && (
-              <Button onClick={() => pwaUpdateServiceWorker()}>Reload for New Version</Button>
-            )}
-          </div>
-        </CardContent>
-      </Card>
 
       <Separator />
 
@@ -143,6 +141,21 @@ function SettingsPage({ pwaNeedsRefresh, pwaUpdateServiceWorker }: SettingsPageP
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>About</CardTitle>
+          <CardDescription>Information about the application.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex justify-between items-center">
+            <span>Version: {import.meta.env.APP_VERSION}</span>
+            {pwaNeedsRefresh && (
+              <Button onClick={() => pwaUpdateServiceWorker()}>Reload for New Version</Button>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
