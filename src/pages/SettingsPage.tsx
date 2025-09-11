@@ -110,7 +110,7 @@ function SettingsPage({ pwaNeedsRefresh, pwaUpdateServiceWorker }: SettingsPageP
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex justify-between items-center">
-            <span>Version: {__APP_VERSION__}</span>
+            <span>Version: {import.meta.env.APP_VERSION}</span>
             {pwaNeedsRefresh && (
               <Button onClick={() => pwaUpdateServiceWorker()}>Reload for New Version</Button>
             )}
