@@ -1,11 +1,17 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Layout from "@/components/Layout";
-import HomePage from "@/pages/HomePage";
-import NoteEditorPage from "@/pages/NoteEditorPage";
-import SettingsPage from "@/pages/SettingsPage";
-import { Toaster } from "@/components/ui/sonner";
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from '@/components/Layout';
+import HomePage from '@/pages/HomePage';
+import NoteEditorPage from '@/pages/NoteEditorPage';
+import SettingsPage from '@/pages/SettingsPage';
+import { Toaster } from '@/components/ui/sonner';
+import { cleanupOldNotes } from './lib/cleanup';
 
 function App() {
+  useEffect(() => {
+    cleanupOldNotes();
+  }, []);
+
   return (
     <Router>
       <Routes>
