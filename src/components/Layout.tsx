@@ -1,8 +1,25 @@
 import { Link, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus, Settings, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { syncWithRemote } from "@/lib/sync";
+import { toast } from "sonner";
 
 function Layout() {
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const handleSync = async () => {
+    setIsSyncing(true);
+    toast.info("Syncing...");
+    try {
+      await syncWithRemote();
+      toast.success("Sync complete!");
+    } catch (error) {
+      toast.error("Sync failed. Please check your settings.");
+    }
+    setIsSyncing(false);
+  };
+
   return (
     <div className="flex min-h-svh flex-col">
       <header className="flex items-center justify-between border-b px-4 py-2">
@@ -16,8 +33,8 @@ function Layout() {
               <span className="sr-only">New Note</span>
             </Link>
           </Button>
-          <Button variant="ghost" size="icon">
-            <RefreshCw className="h-5 w-5" />
+          <Button variant="ghost" size="icon" onClick={handleSync} disabled={isSyncing}>
+            <RefreshCw className={`h-5 w-5 ${isSyncing ? "animate-spin" : ""}`} />
             <span className="sr-only">Sync</span>
           </Button>
           <Button variant="ghost" size="icon" asChild>
