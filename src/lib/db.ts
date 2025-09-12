@@ -33,13 +33,14 @@ const db = new MemosDB();
 /**
  * Adds a new note to the local database.
  * @param content The markdown content of the note.
+ * @param displayTime The optional display time of the note. Defaults to now.
  */
-export async function addNote(content: string): Promise<void> {
+export async function addNote(content: string, displayTime?: Date): Promise<void> {
   try {
     await db.notes.add({
       content,
       isSynced: false,
-      displayTime: new Date(),
+      displayTime: displayTime || new Date(),
     });
   } catch (error) {
     console.error("Failed to add note: ", error);
@@ -50,14 +51,14 @@ export async function addNote(content: string): Promise<void> {
  * Updates an existing note in the local database.
  * @param localId The local ID of the note to update.
  * @param content The new markdown content.
+ * @param displayTime The optional display time for the note. Defaults to now.
  */
-export async function updateNote(localId: number, content: string): Promise<void> {
+export async function updateNote(localId: number, content: string, displayTime?: Date): Promise<void> {
     try {
-        // Also update displayTime to reflect the latest change
-        await db.notes.update(localId, { 
-            content, 
-            isSynced: false, 
-            displayTime: new Date() 
+        await db.notes.update(localId, {
+            content,
+            isSynced: false,
+            displayTime: displayTime || new Date(),
         });
     } catch (error) {
         console.error(`Failed to update note ${localId}: `, error);
